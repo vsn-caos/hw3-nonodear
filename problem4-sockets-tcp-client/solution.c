@@ -29,5 +29,26 @@ int main(int argc, char *argv[]) {
     //       реализуйте цикл чтения/отправки/приёма/вывода чисел.
     //       Порядок байт — Little Endian (на x86/x86_64 это нативный порядок).
 
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+
+    struct sockaddr_in addr = {0}; 
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(atoi(argv[2])); 
+    inet_aton(argv[1], &addr.sin_addr);  
+
+    if (connect(sock, (struct sockaddr *)&addr, sizeof(addr)) != 0) {
+        return 1;
+    }
+
+    int32_t num;
+    while (scanf("%d", &num) == 1) {
+        if (write(sock, &num, sizeof(num)) <= 0) break;
+        if (read(sock, &num, sizeof(num)) <= 0) break;
+
+        printf("%d\n", num);
+        fflush(stdout);
+    }
+    close(sock);
+
     return 0;
 }

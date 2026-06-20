@@ -20,6 +20,26 @@ int main(int argc, char *argv[]) {
 
     // TODO: создайте цепочку из N процессов (каждый не более чем с одним потомком).
     //       Каждый процесс выводит одно число. Порядок вывода должен быть 1 2 3 ... N.
+    for (int i = 1; i <= n; i++) {
+        if (i < n) {
+            printf("%d ", i);
+        } else {
+            printf("%d\n", i);
+        }
+        
+        fflush(stdout);
+        if (i == n) {
+            break;
+        }
 
+        pid_t pid = fork();
+        if (pid == -1) {
+            perror("fork");
+            return 1;
+        } else if (pid > 0) {
+            waitpid(pid, NULL, 0);
+            break;
+        }
+    }
     return 0;
 }
