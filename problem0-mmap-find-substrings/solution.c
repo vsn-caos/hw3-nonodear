@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 
     const char *filename = argv[1];
     const char *substr = argv[2];
-    size_t sub_len = strlen(substring);
+    size_t sub_len = strlen(substr);
 
     if (sub_len == 0) return 0;
     
@@ -54,13 +54,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    for (off_t i = 0; i <= file_size - (off_t)sub_len; ++i) {
+    for (off_t i = 0; i <= st.st_size - (off_t)sub_len; ++i) {
         if (memcmp(mdata + i, substr, sub_len) == 0) {
             printf("%ld\n", (long)i);
         }
     }
 
-    munmap(mdata, file_size);
+    munmap(mdata, st.st_size);
     close(fd);
 
     return 0;
